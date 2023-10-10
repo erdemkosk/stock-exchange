@@ -11,6 +11,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { StockModule } from './stock/stock.module';
+import { OrderModule } from './order/order.module';
+import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
+import { Order } from './order/entities/order.entity';
+import { Stock } from './stock/entities/stock.entitiy';
 
 @Module({
   imports: [
@@ -28,7 +34,7 @@ import { classes } from '@automapper/classes';
         username: configService.get<string>('postgreSql.dbUsername'),
         password: configService.get<string>('postgreSql.dbPassword'),
         database: configService.get<string>('postgreSql.dbName'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        entities: [User, Order, Stock],
         synchronize: true,
       }),
       inject: [ConfigService],
@@ -38,6 +44,9 @@ import { classes } from '@automapper/classes';
     }),
     LoggerModule.forRoot(),
     HealthModule,
+    StockModule,
+    OrderModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, ShutdownHandler],
