@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HealthModule } from './health/health.module';
 import { Logger } from 'nestjs-pino';
 import { UserModule } from './user/user.module';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -36,6 +37,8 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   app.useLogger(app.get(Logger));
+
+  app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
 
   await app.listen(configService.get<number>('PORT'));
 }
