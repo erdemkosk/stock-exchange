@@ -6,6 +6,11 @@ import { Entity, Column, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
+  constructor(user: Partial<User>) {
+    super();
+    Object.assign(this, user);
+  }
+
   @AutoMap()
   @Column({ nullable: false })
   username: string;

@@ -5,6 +5,7 @@ import { ShutdownHandler } from './common/shutdown/shutdown-handler';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HealthModule } from './health/health.module';
 import { Logger } from 'nestjs-pino';
+import { UserModule } from './user/user.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -29,7 +30,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, options, {
-    include: [HealthModule],
+    include: [HealthModule, UserModule],
   });
 
   SwaggerModule.setup('docs', app, document);

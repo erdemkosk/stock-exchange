@@ -17,6 +17,7 @@ import { UserModule } from './user/user.module';
 import { User } from './user/entities/user.entity';
 import { Order } from './order/entities/order.entity';
 import { Stock } from './stock/entities/stock.entitiy';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { Stock } from './stock/entities/stock.entitiy';
       strategyInitializer: classes(),
     }),
     LoggerModule.forRoot(),
+    EventEmitterModule.forRoot(),
     HealthModule,
     StockModule,
     OrderModule,
