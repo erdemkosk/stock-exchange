@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -18,6 +18,9 @@ import { User } from './user/entities/user.entity';
 import { Order } from './order/entities/order.entity';
 import { Stock } from './stock/entities/stock.entitiy';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { ValidationException } from './common/exception';
+import { QueryFailedToQueryFailedExceptionInterceptor } from './common/interceptors';
 
 @Module({
   imports: [
@@ -51,6 +54,25 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ShutdownHandler],
+  providers: [
+    AppService,
+    ShutdownHandler,
+    {
+      provide: APP_PIPE,
+      useFactory: () =>
+        new ValidationPipe({
+          transform: true,
+          exceptionFactory: (errors: ValidationError[]) => {
+            errors.map((e) => {
+              throw new ValidationException(e);
+            });
+          },
+        }),
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: QueryFailedToQueryFailedExceptionInterceptor,
+    },
+  ],
 })
 export class AppModule {}

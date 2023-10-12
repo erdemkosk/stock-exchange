@@ -7,6 +7,7 @@ import { HealthModule } from './health/health.module';
 import { Logger } from 'nestjs-pino';
 import { UserModule } from './user/user.module';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionsFilter } from './common/filters/http-error.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -39,6 +40,8 @@ async function bootstrap() {
   app.useLogger(app.get(Logger));
 
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
+
+  app.useGlobalFilters(new HttpExceptionsFilter(app.get(Logger)));
 
   await app.listen(configService.get<number>('PORT'));
 }

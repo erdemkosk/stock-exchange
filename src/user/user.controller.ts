@@ -6,12 +6,19 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ReadUserDto } from './dto';
+import { CustomException } from 'src/common/exception';
 
 @ApiTags('user')
 @Controller('user')
@@ -21,6 +28,11 @@ export class UserController {
   @ApiOperation({ summary: 'Create An User' })
   @ApiResponse({
     type: ReadUserDto,
+  })
+  @ApiBadRequestResponse({
+    type: CustomException,
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Error occured during this operation',
   })
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {

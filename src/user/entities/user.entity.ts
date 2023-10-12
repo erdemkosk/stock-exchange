@@ -12,11 +12,11 @@ export class User extends BaseEntity {
   }
 
   @AutoMap()
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   username: string;
 
   @AutoMap()
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   email: string;
 
   @AutoMap()
