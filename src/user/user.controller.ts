@@ -39,8 +39,9 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @ApiOperation({ summary: 'Get all users' })
   @Get()
-  findAll() {
+  async findAll() {
     return this.userService.findAll();
   }
 

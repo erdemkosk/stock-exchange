@@ -9,6 +9,8 @@ import { ReadUserDto } from './dto';
 
 import { MailAdapter } from './event/adapter/mail.adapter';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -16,6 +18,7 @@ export class UserService {
     private readonly entityManager: EntityManager,
     private readonly eventEmitter: EventEmitter2,
     @InjectMapper() private readonly userMapper: Mapper,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
   async create(createUserDto: CreateUserDto) {
     const user: User = new User(createUserDto);
@@ -29,8 +32,12 @@ export class UserService {
     );
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll() {
+    return this.userMapper.mapArrayAsync(
+      await this.userRepository.find(),
+      User,
+      ReadUserDto,
+    );
   }
 
   findOne(id: number) {
