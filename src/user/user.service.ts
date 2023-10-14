@@ -40,15 +40,39 @@ export class UserService {
     );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this.userMapper.mapAsync(
+      await this.userRepository.findOneBy({ id }),
+      User,
+      ReadUserDto,
+    );
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<ReadUserDto | undefined> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      console.log('there is no user');
+    }
+
+    updateUserDto.id = id;
+    const updatedUser = this.userMapper.map(updateUserDto, UpdateUserDto, User);
+
+    return this.userMapper.mapAsync(
+      await this.userRepository.save(updatedUser),
+      User,
+      ReadUserDto,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.userRepository.delete({ id });
+
+    return {
+      success: true,
+    };
   }
 }
