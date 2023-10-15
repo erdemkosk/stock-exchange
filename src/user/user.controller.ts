@@ -35,23 +35,28 @@ export class UserController {
     description: 'Error occured during this operation',
   })
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<ReadUserDto | undefined> {
     return this.userService.create(createUserDto);
   }
 
   @ApiOperation({ summary: 'Get all users' })
   @Get()
-  async findAll() {
+  async findAll(): Promise<ReadUserDto[] | []> {
     return this.userService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string): Promise<ReadUserDto | undefined> {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<ReadUserDto | undefined> {
     return this.userService.update(id, updateUserDto);
   }
 

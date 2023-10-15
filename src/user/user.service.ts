@@ -21,7 +21,7 @@ export class UserService {
     @InjectMapper() private readonly userMapper: Mapper,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<ReadUserDto | undefined> {
     const user: User = new User(createUserDto);
 
     this.eventEmitter.emit('user.created', new MailAdapter(user.email));
@@ -33,7 +33,7 @@ export class UserService {
     );
   }
 
-  async findAll() {
+  async findAll(): Promise<ReadUserDto[] | undefined> {
     return this.userMapper.mapArrayAsync(
       await this.userRepository.find(),
       User,
@@ -41,7 +41,7 @@ export class UserService {
     );
   }
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<ReadUserDto | undefined> {
     return this.userMapper.mapAsync(
       await this.userRepository.findOneBy({ id }),
       User,
