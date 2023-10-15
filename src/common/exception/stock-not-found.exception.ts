@@ -6,12 +6,12 @@ import {
 } from 'src/common/constants';
 import { CustomException } from './custom.exception';
 
-export class UserNotFoundException extends CustomException {
+export class StockNotFoundException extends CustomException {
   constructor(data: unknown, countryCode?: string) {
     const lang = countryCode ? countryCode : DEFAULT_COUNTRY_CODE;
     super(
-      ExceptionMessages[UserNotFoundException.name].message[lang],
-      ExceptionMessages[UserNotFoundException.name].code,
+      ExceptionMessages[StockNotFoundException.name].message[lang],
+      ExceptionMessages[StockNotFoundException.name].code,
       HttpStatus.NOT_FOUND,
       data,
       LOGLEVEL.ERROR,

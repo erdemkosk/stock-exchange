@@ -1,10 +1,10 @@
-import { BaseEntity } from 'src/common/entities';
+import { AbstractEntity } from 'src/common/entities';
 import { Stock } from 'src/stock/entities/stock.entitiy';
 import { User } from 'src/user/entities/user.entity';
 import { Entity, Column, ManyToOne } from 'typeorm';
 
 @Entity()
-export class Order extends BaseEntity {
+export class Order extends AbstractEntity<Order> {
   @Column({ nullable: false })
   shortName: string;
 
@@ -20,6 +20,6 @@ export class Order extends BaseEntity {
   @ManyToOne(() => User, (user) => user.orders)
   user: User;
 
-  @ManyToOne(() => Stock, (stock) => stock.orders)
+  @ManyToOne(() => Stock)
   stock: Stock;
 }

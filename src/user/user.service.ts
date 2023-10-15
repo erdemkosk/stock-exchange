@@ -11,7 +11,7 @@ import { MailAdapter } from './event/adapter/mail.adapter';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserFoundException } from 'src/common/exception/user-not-found.exception';
+import { UserNotFoundException } from 'src/common/exception/user-not-found.exception';
 
 @Injectable()
 export class UserService {
@@ -24,13 +24,11 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<ReadUserDto | undefined> {
     const user: User = new User(createUserDto);
 
+    await this.entityManager.save(user);
+
     this.eventEmitter.emit('user.created', new MailAdapter(user.email));
 
-    return this.userMapper.mapAsync(
-      await this.entityManager.save(user),
-      User,
-      ReadUserDto,
-    );
+    return this.userMapper.map(user, User, ReadUserDto);
   }
 
   async findAll(): Promise<ReadUserDto[] | undefined> {
@@ -56,7 +54,7 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      throw new UserFoundException({ id });
+      throw new UserNotFoundException({ id });
     }
 
     updateUserDto.id = id;

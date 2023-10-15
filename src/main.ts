@@ -8,6 +8,7 @@ import { Logger } from 'nestjs-pino';
 import { UserModule } from './user/user.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionsFilter } from './common/filters/http-error.filter';
+import { StockModule } from './stock/stock.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -32,7 +33,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, options, {
-    include: [HealthModule, UserModule],
+    include: [HealthModule, UserModule, StockModule],
   });
 
   SwaggerModule.setup('docs', app, document);

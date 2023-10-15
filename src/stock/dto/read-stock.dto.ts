@@ -1,8 +1,17 @@
-import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
+import { AutoMap } from '@automapper/classes';
 import { IsDefined, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class CreateStockDto {
+export class ReadStockDto {
+  @AutoMap()
+  @ApiProperty({
+    type: String,
+    description: 'Stock id',
+  })
+  @IsDefined()
+  @IsString()
+  id: string;
+
   @AutoMap()
   @ApiProperty({
     type: String,

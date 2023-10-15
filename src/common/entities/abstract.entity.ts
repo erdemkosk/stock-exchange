@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+
 import {
   PrimaryGeneratedColumn,
   Column,
@@ -6,7 +7,11 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export abstract class BaseEntity {
+export abstract class AbstractEntity<T> {
+  constructor(entity: Partial<T>) {
+    Object.assign(this, entity);
+  }
+
   @AutoMap()
   @PrimaryGeneratedColumn('uuid')
   id: string;

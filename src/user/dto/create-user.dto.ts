@@ -7,6 +7,7 @@ export class CreateUserDto {
   @ApiProperty({
     type: String,
     description: 'Username of the user',
+    example: 'username',
   })
   @IsDefined()
   @IsNotEmpty()
@@ -17,6 +18,7 @@ export class CreateUserDto {
   @ApiProperty({
     type: String,
     description: 'Email of the user',
+    example: 'username@gmail.com',
   })
   @IsDefined()
   @IsString()
