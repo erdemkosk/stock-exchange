@@ -11,6 +11,7 @@ import { MailAdapter } from './event/adapter/mail.adapter';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserFoundException } from 'src/common/exception/user-not-found.exception';
 
 @Injectable()
 export class UserService {
@@ -55,7 +56,7 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
 
     if (!user) {
-      console.log('there is no user');
+      throw new UserFoundException({ id });
     }
 
     updateUserDto.id = id;
