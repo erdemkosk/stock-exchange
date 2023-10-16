@@ -8,6 +8,7 @@ import { StockProfile } from './mapper/stock.profile';
 @Module({
   imports: [TypeOrmModule.forFeature([Stock])],
   controllers: [StockController],
+  exports: [StockService],
   providers: [StockService, StockProfile],
 })
 export class StockModule {}

@@ -1,8 +1,23 @@
 import { AutoMap } from '@automapper/classes';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
-export class CreateOrderDto {
+export class ReadOrderDto {
+  @AutoMap()
+  @ApiProperty({
+    type: String,
+    description: 'Order id',
+  })
+  @IsDefined()
+  @IsString()
+  id: string;
+
   @AutoMap()
   @ApiProperty({
     type: String,
@@ -25,11 +40,6 @@ export class CreateOrderDto {
   @IsUUID()
   stockId: string;
 
-  @ApiProperty({
-    type: Number,
-    description: 'Count of stock',
-    example: 5,
-  })
   @IsNumber()
   @IsNotEmpty()
   count: number;

@@ -1,6 +1,4 @@
 import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { configuration, validationSchema, validationOptions } from 'config';
@@ -53,9 +51,7 @@ import { QueryFailedToQueryFailedExceptionInterceptor } from './common/intercept
     OrderModule,
     UserModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     ShutdownHandler,
     {
       provide: APP_PIPE,

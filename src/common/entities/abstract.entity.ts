@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 
 export abstract class AbstractEntity<T> {
-  constructor(entity: Partial<T>) {
-    Object.assign(this, entity);
+  constructor(entity?: Partial<T>) {
+    if (entity) Object.assign(this, entity);
   }
 
   @AutoMap()

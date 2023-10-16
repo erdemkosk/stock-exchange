@@ -14,7 +14,7 @@ export class ReadUserDto {
   @AutoMap()
   @ApiProperty({
     type: String,
-    description: 'User id as mongodb id',
+    description: 'User id',
   })
   @IsDefined()
   @IsString()

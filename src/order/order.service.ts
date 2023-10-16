@@ -1,26 +1,61 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateOrderDto, UpdateOrderDto, ReadOrderDto } from './dto';
+import { Order } from './entities/order.entity';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { EntityManager } from 'typeorm';
+import { UserService } from 'src/user/user.service';
+import { StockService } from 'src/stock/stock.service';
 
 @Injectable()
 export class OrderService {
-  create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
+  constructor(
+    private readonly entityManager: EntityManager,
+    @InjectMapper() private readonly orderMapper: Mapper,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>,
+    private readonly userService: UserService,
+    private readonly stockService: StockService,
+  ) {}
+
+  async create(createOrderDto: CreateOrderDto): Promise<ReadOrderDto> {
+    const order = new Order();
+
+    const [user, stock] = await Promise.all([
+      this.userService.findById(createOrderDto.userId),
+      this.stockService.findById(createOrderDto.stockId),
+    ]);
+
+    order.user = user;
+    order.stock = stock;
+    order.count = createOrderDto.count;
+
+    const createdOrder = await this.entityManager.save(order);
+
+    return this.orderMapper.map(createdOrder, Order, ReadOrderDto);
   }
 
-  findAll() {
-    return `This action returns all order`;
+  async findAll(): Promise<ReadOrderDto[]> {
+    return this.orderMapper.mapArrayAsync(
+      await this.orderRepository.find(),
+      Order,
+      ReadOrderDto,
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findOne(id: string): Promise<ReadOrderDto> {
+    return this.orderMapper.mapAsync(
+      await this.orderRepository.findOneBy({ id }),
+      Order,
+      ReadOrderDto,
+    );
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async update(id: string, updateOrderDto: UpdateOrderDto) {
+    return 'test';
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
-  }
+  async remove(id: string): Promise<void> {}
 }

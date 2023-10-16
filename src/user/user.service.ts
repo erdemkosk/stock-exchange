@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { EntityManager } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { ReadUserDto } from './dto';
+import { CreateUserDto, ReadUserDto, UpdateUserDto } from './dto';
 
 import { MailAdapter } from './event/adapter/mail.adapter';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -73,5 +71,9 @@ export class UserService {
     return {
       success: true,
     };
+  }
+
+  async findById(id: string): Promise<User> {
+    return await this.userRepository.findOneBy({ id });
   }
 }

@@ -75,4 +75,8 @@ export class StockService {
       success: true,
     };
   }
+
+  async findById(id: string): Promise<Stock> {
+    return await this.stockRepository.findOneBy({ id });
+  }
 }

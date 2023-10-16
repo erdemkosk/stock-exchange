@@ -11,7 +11,9 @@ import { StockService } from './stock.service';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
 import { ReadStockDto } from './dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('stock')
 @Controller('stock')
 export class StockController {
   constructor(private readonly stockService: StockService) {}
