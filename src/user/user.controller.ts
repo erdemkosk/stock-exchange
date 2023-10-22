@@ -47,11 +47,19 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @ApiOperation({ summary: 'Get an single user' })
+  @ApiResponse({
+    type: ReadUserDto,
+  })
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<ReadUserDto | undefined> {
     return this.userService.findOne(id);
   }
 
+  @ApiOperation({ summary: 'Update an User' })
+  @ApiResponse({
+    type: UpdateUserDto,
+  })
   @Patch(':id')
   async update(
     @Param('id') id: string,

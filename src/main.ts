@@ -2,14 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ShutdownHandler } from './common/shutdown/shutdown-handler';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { HealthModule } from './health/health.module';
+import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
-import { UserModule } from './user/user.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionsFilter } from './common/filters/http-error.filter';
-import { StockModule } from './stock/stock.module';
-import { OrderModule } from './order/order.module';
+import { version, name, description } from '../package.json';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
@@ -26,20 +23,23 @@ async function bootstrap() {
 
   // swagger
 
-  const options = new DocumentBuilder()
-    .setTitle(' Stock Exchange API documents')
-    .setDescription('The API description on stock exchange')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+  const documentBuilderConfig: Omit<OpenAPIObject, 'paths'> =
+    new DocumentBuilder()
+      .setTitle(name)
+      .setDescription(description)
+      .setVersion(version)
+      .build();
 
-  const document = SwaggerModule.createDocument(app, options, {
-    include: [HealthModule, UserModule, StockModule, OrderModule],
-  });
+  const SwaggerDocument: OpenAPIObject = SwaggerModule.createDocument(
+    app,
+    documentBuilderConfig,
+  );
 
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, SwaggerDocument, {});
 
   app.useLogger(app.get(Logger));
+
+  app.enableShutdownHooks();
 
   app.useGlobalPipes(new ValidationPipe({ stopAtFirstError: true }));
 
