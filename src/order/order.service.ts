@@ -8,6 +8,8 @@ import { Mapper } from '@automapper/core';
 import { EntityManager } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { StockService } from 'src/stock/stock.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { OrderCreatedAdapter } from './event/adapter/order-created.adapter';
 
 @Injectable()
 export class OrderService {
@@ -18,6 +20,7 @@ export class OrderService {
     private readonly orderRepository: Repository<Order>,
     private readonly userService: UserService,
     private readonly stockService: StockService,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<ReadOrderDto> {
@@ -33,6 +36,16 @@ export class OrderService {
     order.count = createOrderDto.count;
 
     const createdOrder = await this.entityManager.save(order);
+
+    this.eventEmitter.emit(
+      'order.created',
+      new OrderCreatedAdapter({
+        orderId: createdOrder.id,
+        stockId: order.stock.id,
+        userId: order.user.id,
+        count: order.count,
+      }),
+    );
 
     return this.orderMapper.map(createdOrder, Order, ReadOrderDto);
   }

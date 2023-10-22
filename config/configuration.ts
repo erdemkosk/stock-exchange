@@ -8,4 +8,7 @@ export const configuration = () => ({
     dbPassword: process.env.DB_PASSWORD,
     dbName: process.env.DB_NAME,
   },
+  kafka: {
+    kafkaBrokers: process.env.KAFKA_BROKER,
+  },
 });

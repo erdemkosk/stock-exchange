@@ -2,8 +2,7 @@ import { Module, ValidationError, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { configuration, validationSchema, validationOptions } from 'config';
-import { HealthModule } from './health/health.module';
-import { ShutdownHandler } from './common/shutdown/shutdown-handler';
+import { HealthModule } from './bootstrap-modules/health/health.module';
 import { LoggerModule } from 'nestjs-pino';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -19,6 +18,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ValidationException } from './common/exception';
 import { QueryFailedToQueryFailedExceptionInterceptor } from './common/interceptors';
+import { KafkaModule } from './bootstrap-modules/kafka/kafka.module';
 
 @Module({
   imports: [
@@ -50,9 +50,9 @@ import { QueryFailedToQueryFailedExceptionInterceptor } from './common/intercept
     StockModule,
     OrderModule,
     UserModule,
+    KafkaModule,
   ],
   providers: [
-    ShutdownHandler,
     {
       provide: APP_PIPE,
       useFactory: () =>

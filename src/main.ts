@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { ShutdownHandler } from './common/shutdown/shutdown-handler';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 import { ValidationPipe } from '@nestjs/common';
@@ -11,15 +10,6 @@ import { version, name, description } from '../package.json';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
   const configService = app.get<ConfigService>(ConfigService);
-
-  // Greceful shutdown
-  const shutdownHandler = app.get(ShutdownHandler);
-
-  process.on('SIGTERM', async () => {
-    console.log('Graceful Shutdown starting...');
-    await shutdownHandler.onShutdown('SIGTERM');
-    process.exit(0);
-  });
 
   // swagger
 
