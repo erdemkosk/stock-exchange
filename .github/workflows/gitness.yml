@@ -5,14 +5,14 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
- 
-  #schedule:
-   # - cron: '0 0 * * MON'
 
 jobs:
   check-bus-factor:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
       - name: Run Bus Factor Analysis
         uses: docker://erdemkosk/gitness:latest
         env:
@@ -20,20 +20,3 @@ jobs:
           REPOSITORY_URL: ${{ github.repository }}
           OUTPUT_FORMAT: json
         id: analysis
-
-      # İsteğe bağlı: Sonucu PR'a comment olarak ekle
-      #- name: Comment PR
-        #if: github.event_name == 'pull_request'
-        #uses: actions/github-script@v6
-        #with:
-          #script: |
-            #const output = `### Repository Health Check Results
-            #Bus Factor Analysis completed successfully.
-            #See attached report for details.`;
-            
-            #github.rest.issues.createComment({
-              #issue_number: context.issue.number,
-              #owner: context.repo.owner,
-             # repo: context.repo.repo,
-              #body: output
-            #})
