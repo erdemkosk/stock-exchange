@@ -17,6 +17,6 @@ jobs:
         uses: docker://erdemkosk/gitness:latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITNESS_GITHUB_TOKEN }}
-          REPOSITORY_URL: ${{ github.repository }}
+          REPOSITORY_URL: "https://github.com/${{ github.repository }}"
           OUTPUT_FORMAT: json
         id: analysis
