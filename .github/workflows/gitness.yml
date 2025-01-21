@@ -18,7 +18,7 @@ jobs:
           OUTPUT=$(docker run \
             -e GITHUB_TOKEN="${{ secrets.GITNESS_GITHUB_TOKEN }}" \
             -e REPOSITORY_URL="https://github.com/${{ github.repository }}" \
-            -e OUTPUT_FORMAT=markdown \
+            -e OUTPUT_FORMAT=console \
             erdemkosk/gitness:latest)
           echo "# 📊 Gitness Analysis Report" >> $GITHUB_STEP_SUMMARY
           echo "$OUTPUT" >> $GITHUB_STEP_SUMMARY
